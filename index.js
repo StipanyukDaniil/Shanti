@@ -41,58 +41,32 @@ $(document).ready(function(){
         };
     });
 
-var slideIndex = 1;
-showSlides(slideIndex);
-function plusSlides(n) {
-    showSlides (slideIndex += n);
-}
 
-function currentSlide(n) {
-    showSlides (slideIndex = n);
-}
-
-function showSlides(n) {
-    var i;
-    var slides = document.getElementsByClassName("reviews");
-    var dots = document.getElementsByClassName("dot");
-
-    if (n>slides.length){
-        slideIndex =1
-    }
-    if (n< 1){
-        slideIndex=slides.length
-    }
-    for (i=0; i< slides.length ; i++){
-        slides[i].style.display='none';
-    }
-    for (i = 0; i < dots.length; i++){
-        dots[i].className= dots[i].className.replace("activeS","")
-    }
-    slides[slideIndex-1].style.display='block';
-    dots[slideIndex-1].className+= "  activeS";
-}
-// const carousel = document.querySelector(".module__slider"),
-// arrowIcons = document.querySelector(".module__slider");
-
-// let isDragStart = false, prevPageX, prevScrollLeft;
-
-// const dragStart = (e) => {
-//     isDragStart = true;
-//     prevPageX = e.pageX;
-//     prevScrollLeft = carousel.scrollLeft;
-// }
-
-// const dragging = (e) => {
-//     if(!isDragStart) return;
-//     e.preventDefault();
-//     let positionDiff = e.pageX - prevPageX;
-//     carousel.scrollLeft = prevScrollLeft - positionDiff;
-// }
-
-// const dragStop = () => {
-//     isDragStart = false;
-// }
-
-// carousel.addEventListener("mousedown", dragStart);
-// carousel.addEventListener("mousemove", dragging);
-// carousel.addEventListener("mouseup", dragStop);
+    
+    $(function() {
+        $('.slider').each(function() {    
+            let $th = $(this);
+            $th.attr('data-pos', 1);
+            let slide = $th.find('.slider-slide');
+            let num = $th.find('.slider-slide').length;
+            let dots = $th.find('.slider-dots');
+            dots.prepend('<span class="slider-indicator"></span>');
+            for( let i = 1; i <= num; i++ ){ 
+                dots.append('<span style="width:' + 100 / num + '%" class="slider-dot" data-pos="'+ i +'"></span>');    
+            }
+            $th.find('.slider-slides').css('width', 100 * num + '%');
+            slide.css('width', 100 / num + '%');
+            $th.find('.slider-dot').on('click', function(){
+                let currentPos = $th.attr('data-pos');
+                let newPos = $(this).attr('data-pos');
+                let newDirection = (newPos > currentPos ? 'right' : 'left');
+                let currentDirection = (newPos < currentPos ? 'right' : 'left');
+                $th.find('.slider-indicator').removeClass('slider-indicator-' + currentDirection);
+                $th.find('.slider-indicator').addClass('slider-indicator-' + newDirection);        
+                $th.attr('data-pos', newPos);    
+                $th.find('.slider-slides').css('transform', 'translateX(-' + 100 / num * (newPos - 1) + '%)');            
+                $th.find('.slider-indicator').css({'left': 100 / num * (newPos - 1) + '%','right':100 - (100 / num) - 100 / num * (newPos - 1) + '%'});
+            });        
+            $th.find('.slider-indicator').css({'left': 0,'right': 100 - (100 / num) + '%'});
+        });
+    });
